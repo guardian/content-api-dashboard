@@ -21,7 +21,6 @@ class EC2InstanceFinder(config: Configuration) {
   def findInstanceHostnames(tags: Seq[(String, String)]): Future[Seq[String]] = {
     val filters = tags.map {
       case (tagName, value) =>
-        // double-dollar sign in an interpolated string is a literal dollar sign
         new Filter(s"tag:$tagName", java.util.Arrays.asList(s"$value"))
     }.asJava
 
