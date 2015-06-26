@@ -1,0 +1,19 @@
+{
+  "name": "capi-dashboard",
+  "version": "0.0.0",
+  "authors": [
+    "Chris Birchall"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "zeroclipboard": "~2.2.0"
+  }
+}

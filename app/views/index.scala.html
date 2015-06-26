@@ -1,0 +1,156 @@
+@(panels: Seq[models.Panel])
+
+@import org.joda.time.DateTime
+
+@main("Content API dashboard") {
+
+  <header><h1>Content API</h1></header>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+
+        <div class="panel-heading">
+          <h2 class="panel-title">Global</h2>
+        </div>   
+
+        <div class="panel-body">
+          <div class="col-md-4">
+            <h3>GitHub</h3>
+            <ul>
+              <li><a target="_blank" href="https://github.com/guardian/content-api">content-api</a></li>
+              <li><a target="_blank" href="https://github.com/guardian/api-indexer">api-indexer</a></li>
+              <li><a target="_blank" href="https://github.com/guardian/shuttlerun">shuttlerun</a></li>
+              <li><a target="_blank" href="https://github.com/guardian/pubflow">pubflow</a></li>
+            </ul>
+          </div>
+
+          <div class="col-md-4">
+            <h3>Support/Troubleshooting</h3>
+            <ul>
+              <li><a target="_blank" href="https://github.com/guardian/content-api/blob/master/docs/troubleshooting-for-frontend.md">Try this doc</a></li>
+              <li>TODO: write more docs...</li>
+            </ul>
+          </div>
+
+          <div class="col-md-4">
+            <h3>Monitoring</h3>
+            <ul>
+              <li><a target="_blank" href="http://logcabin.content.guardianapis.com/">Kibana</a></li>
+            </ul>
+          </div>
+        </div>
+
+      </div><!-- end of panel -->
+    </div><!-- end of col-md-12 -->
+  </div><!-- end of row -->
+
+  @for(panel <- panels) {
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+
+          <div class="panel-heading">
+            <h2 class="panel-title">@panel.env.stage @panel.env.stack</h2>
+          </div>
+
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-md-4">
+                <h3>Links</h3>
+                <ul>
+                  @for(url <- panel.env.fastlyUrl) {
+                    <li><a target="_blank" href="@url/to=@{DateTime.now.getMillis / 1000}&from=@{DateTime.now.minusHours(8).getMillis / 1000}&by=minute">Fastly stats (last 8 hours)</a></li>
+                  }
+                  @for(url <- panel.env.nightwatchUrl) {
+                    <li><a target="_blank" href="@url">Nightwatch (status dashboard)</a></li>
+                  }
+                  @for(url <- panel.env.pubflowUrl) {
+                    <li><a target="_blank" href="@url">Pubflow (publication monitoring)</a></li>
+                  }
+                  @for(url <- panel.env.masheryUrl) {
+                    <li><a target="_blank" href="@url">Mashery dashboard (API key management)</a></li>
+                  }
+                  @for(url <- panel.env.apiIndexerUrl) {
+                    <li><a target="_blank" href="@url">api-indexer UI</a></li>
+                  }
+                </ul>
+              </div>
+
+              <div class="col-md-8">
+                <h3>Search</h3>
+                TODO search box
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <h3 class="fetch-elasticsearch-health" @for(firstHost <- panel.elasticsearchHosts.headOption) { data-hostname="@firstHost" }>Elasticsearch</h3>
+                <table class="table table-condensed">
+                  <tr>
+                    <th>Hostname (links to HEAD plugin)</th>
+                    <th>Load average</th>
+                    <th>Heap usage (%)</th>
+                  </tr>
+
+                  @for(host <- panel.elasticsearchHosts) {
+                    <tr class="fetch-elasticsearch-stats" data-hostname="@host">
+                      <td><a target="_blank" href="http://@host:9200/_plugin/head">@host</a></td>
+                      <td class="load-average"></td>
+                      <td class="heap-usage"></td>
+                    </tr>
+                  }
+                </table>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <h3>EC2 instances</h3>
+                <table class="table table-condensed">
+                  <tr>
+                    <th>AWS dashboard</th>
+                    <th>Marauder</th>
+                  </tr>
+                  @for(app <- models.App.apps) {
+                    @defining((panel.env.awsTags ++ app.awsTags).map { case (tagName, value) => s"tag:$tagName=%5E$value$$" }.mkString(";")) { tagFilters =>
+                      <tr>
+                        <td><a target="_blank" href="https://eu-west-1.console.aws.amazon.com/ec2/v2/home?region=eu-west-1#Instances:@tagFilters;sort=launchTime">@app</a></td>
+                        <td><code id="marauder_@{panel.env.stage}_@{panel.env.stack}_@{app.appName}">marauder stage=@{panel.env.stage} stack=@{panel.env.stack.stackName} @{app.appName}</code><button style="margin:0 10px" class="copy-button" data-clipboard-target="marauder_@{panel.env.stage}_@{panel.env.stack}_@{app.appName}"><span class="glyphicon glyphicon-copy" aria-hidden="true"></span></button><span style="display:none">Copied!</span></td>
+                      </tr>
+                    }
+                  }
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+        </div><!-- end of panel -->
+      </div><!-- end of col-md-12 -->
+    </div><!-- end of row -->
+
+  }
+
+
+  <script>
+    ZeroClipboard.config( { swfPath: "/assets/components/zeroclipboard/dist/ZeroClipboard.swf" } );
+
+    var client = new ZeroClipboard($(".copy-button"));
+
+    client.on("ready", function(readyEvent) {
+
+      client.on("aftercopy", function(event) {
+        // `this` === `client`
+        // `event.target` === the element that was clicked
+        var label = $(event.target).next();
+        label.show();
+        label.fadeOut(1000);
+      });
+
+    });
+  </script>
+
+}
