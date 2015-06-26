@@ -5,11 +5,15 @@ import PlayKeys._
 import play._
 import play.sbt.routes.RoutesKeys._
 import com.typesafe.sbt.SbtScalariform._
+import com.typesafe.sbt.packager.Keys._
+import com.gu.riffraff.artifact._
+import RiffRaffArtifact.autoImport._
 
-object CapiDashboard extends Build {
+object ContentApiDashboard extends Build {
 
-  lazy val project = Project(id = "capi-dashboard", base = file("."))
+  lazy val project = Project(id = "content-api-dashboard", base = file("."))
     .enablePlugins(PlayScala)
+    .enablePlugins(RiffRaffArtifact)
     .settings(scalariformSettings)
     .settings(
       scalaVersion := "2.11.6",
@@ -19,7 +23,8 @@ object CapiDashboard extends Build {
         ws,
         "com.amazonaws" % "aws-java-sdk-ec2" % "1.10.2"
       ),
-      routesGenerator := InjectedRoutesGenerator
+      routesGenerator := InjectedRoutesGenerator,
+      riffRaffPackageType := (packageZipTarball in config("universal")).value
     )
 
 }

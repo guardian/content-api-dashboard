@@ -16,4 +16,6 @@ class Application(environments: Seq[Environment], panelBuilder: PanelBuilder) ex
     }
   }
 
+  def healthcheck = Action { Ok("OK") }
+
 }

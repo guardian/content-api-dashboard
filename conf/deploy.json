@@ -1,0 +1,22 @@
+{
+    "defaultStacks": [ "content-api-dashboard" ],
+    "packages": {
+        "content-api-dashboard": {
+            "type": "autoscaling",
+            "data": {
+                "bucket": "content-api-dist"
+            }
+        }
+    },
+    "recipes": {
+        "default": {
+            "depends": [ "artifactUploadOnly", "deployOnly" ]
+        },
+        "artifactUploadOnly": {
+            "actions": [ "content-api-dashboard.uploadArtifacts" ]
+        },
+        "deployOnly": {
+            "actions": [ "content-api-dashboard.deploy" ]
+        }
+    }
+}
