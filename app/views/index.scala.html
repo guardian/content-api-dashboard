@@ -45,6 +45,24 @@
     </div><!-- end of col-md-12 -->
   </div><!-- end of row -->
 
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+
+        <div class="panel-heading">
+          <h2 class="panel-title">Jump</h2>
+        </div>
+
+        <div class="panel-body">
+          @for(panel <- panels) {
+            <div class="col-md-3"><a class="btn btn-primary btn-block" href="#@{panel.env.stage}_@{panel.env.stack}" role="button">@panel.env.stage @panel.env.stack</a></div>
+          }
+        </div>
+
+      </div><!-- end of panel -->
+    </div><!-- end of col-md-12 -->
+  </div><!-- end of row -->
+
   @for(panel <- panels) {
 
     <div class="row">
@@ -52,6 +70,7 @@
         <div class="panel panel-default">
 
           <div class="panel-heading">
+            <a name="@{panel.env.stage}_@{panel.env.stack}"></a>
             <h2 class="panel-title">@panel.env.stage @panel.env.stack</h2>
           </div>
 
