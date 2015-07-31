@@ -13,11 +13,11 @@ import services.{ EC2InstanceFinder, PanelBuilder }
 
 class AppComponents(context: Context) extends BuiltInComponentsFromContext(context) with NingWSComponents {
 
-  val environments = Environments.buildEnvironments(context.initialConfiguration)
+  val environments = Environments.buildEnvironments(configuration)
   Logger.info(s"Generated ${environments.size} environments.")
   for (env <- environments) Logger.info(Json.toJson(env).toString())
 
-  val panelBuilder = new PanelBuilder(new EC2InstanceFinder(context.initialConfiguration))
+  val panelBuilder = new PanelBuilder(new EC2InstanceFinder(configuration))
 
   def missingKey(description: String) = sys.error(s"$description missing. You can create an OAuth 2 client from the Credentials section of the Google dev console.")
   val googleAuthConfig = GoogleAuthConfig(

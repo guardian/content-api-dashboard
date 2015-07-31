@@ -65,7 +65,18 @@ case class Environment(
 
   def awsTags = stage.awsTags ++ stack.awsTags
 
+  private def removeTrailingSlash(url: String): String =
+    if (url.endsWith("/")) url.dropRight(1) else url
+
+  def publicSearchUrl: Option[String] = publicConciergeUrl map { url =>
+    s"${removeTrailingSlash(url)}/search?api-key=test&show-fields=all&show-tags=all&q="
+  }
+
+  def internalSearchUrl: Option[String] = internalConciergeUrl map { url =>
+    s"${removeTrailingSlash(url)}/search?show-fields=all&show-tags=all&q="
+  }
 }
+
 object Environment {
   implicit val environmentWrites = Json.writes[Environment]
 }

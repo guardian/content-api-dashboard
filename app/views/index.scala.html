@@ -99,7 +99,14 @@
 
               <div class="col-md-8">
                 <h3>Search</h3>
-                TODO search box
+                <ul>
+                @for(url <- panel.env.publicSearchUrl) {
+                  <li><a target="_blank" href="@url">@url</a></li>
+                }
+                @for(url <- panel.env.internalSearchUrl) {
+                  <li><a target="_blank" href="@url">@url</a></li>
+                }
+                </ul>
               </div>
 
             </div>
