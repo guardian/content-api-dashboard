@@ -112,28 +112,16 @@
             </div>
 
             <div class="row">
-              <div class="col-md-12">
-                <h3 class="fetch-elasticsearch-health" @for(firstHost <- panel.elasticsearchHosts.headOption) { data-hostname="@firstHost" }>Elasticsearch</h3>
-                <table class="table table-condensed">
-                  <tr>
-                    <th>Hostname (links to HEAD plugin)</th>
-                    <th>Load average</th>
-                    <th>Heap usage (%)</th>
-                  </tr>
-
+              <div class="col-md-4">
+                <h3>Elasticsearch <small>(links to HEAD)</small></h3>
+                  <ul>
                   @for(host <- panel.elasticsearchHosts) {
-                    <tr class="fetch-elasticsearch-stats" data-hostname="@host">
-                      <td><a target="_blank" href="http://@host:9200/_plugin/head">@host</a></td>
-                      <td class="load-average"></td>
-                      <td class="heap-usage"></td>
-                    </tr>
+                    <li><a target="_blank" href="http://@host:9200/_plugin/head">@{host.replaceAllLiterally(".compute.amazonaws.com", "")}</a></li>
                   }
-                </table>
+                  </ul>
               </div>
-            </div>
 
-            <div class="row">
-              <div class="col-md-12">
+              <div class="col-md-8">
                 <h3>EC2 instances</h3>
                 <table class="table table-condensed">
                   <tr>
