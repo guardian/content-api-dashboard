@@ -2,21 +2,21 @@ package controllers
 
 import com.gu.googleauth.{ UserIdentity, GoogleAuth, GoogleAuthConfig }
 import play.api.libs.json.Json
+import play.api.libs.ws.WSAPI
 import play.api.mvc._
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class Auth(val authConfig: GoogleAuthConfig, application: => play.api.Application) extends Controller with AuthActions {
+class Auth(val authConfig: GoogleAuthConfig, ws: WSAPI) extends Controller with AuthActions {
   import Auth._
 
   /*
   Redirect to Google with anti forgery token
   */
   def login = Action.async { implicit request =>
-    implicit val app = application
     val antiForgeryToken = GoogleAuth.generateAntiForgeryToken()
-    GoogleAuth.redirectToGoogle(authConfig, antiForgeryToken).map {
+    GoogleAuth.redirectToGoogle(authConfig, antiForgeryToken, ws).map {
       _.withSession { request.session + (AntiForgeryKey -> antiForgeryToken) }
     }
   }
@@ -27,13 +27,12 @@ class Auth(val authConfig: GoogleAuthConfig, application: => play.api.Applicatio
   will return a Future[UserIdentity] if the authentication is successful. If unsuccessful then the Future will fail.
   */
   def oauth2Callback = Action.async { implicit request =>
-    implicit val app = application
     val session = request.session
     session.get(AntiForgeryKey) match {
       case None =>
         Future.successful(Forbidden("Anti forgery token missing in session"))
       case Some(token) =>
-        GoogleAuth.validatedUserIdentity(authConfig, token).map { identity =>
+        GoogleAuth.validatedUserIdentity(authConfig, token, ws).map { identity =>
           // We store the URL a user was trying to get to in the LOGIN_ORIGIN_KEY in AuthAction
           // Redirect a user back there now if it exists
           val redirect = session.get(LOGIN_ORIGIN_KEY) match {

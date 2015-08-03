@@ -30,11 +30,9 @@ class AppComponents(context: Context) extends BuiltInComponentsFromContext(conte
   )
 
   val appController = new Application(environments, panelBuilder, googleAuthConfig)
-  val authController = new Auth(googleAuthConfig, application)
+  val authController = new Auth(googleAuthConfig, wsApi)
 
   val assets = new controllers.Assets(httpErrorHandler)
   val router: Router = new Routes(httpErrorHandler, appController, authController, assets)
-
-  override lazy val injector = new SimpleInjector(NewInstanceInjector) + router + crypto + httpConfiguration + wsApi + wsClient
 
 }

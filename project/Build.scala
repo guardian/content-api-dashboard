@@ -21,7 +21,7 @@ object ContentApiDashboard extends Build {
       libraryDependencies ++= Seq(
         ws,
         "com.amazonaws" % "aws-java-sdk-ec2" % "1.10.2",
-        "com.gu" %% "play-googleauth" % "0.3.0"
+        "com.gu" %% "play-googleauth" % "0.3.1"
       ),
       routesGenerator := InjectedRoutesGenerator,
       riffRaffPackageType := (packageZipTarball in config("universal")).value
