@@ -26,10 +26,9 @@
           </div>
 
           <div class="col-md-4">
-            <h3>Support/Troubleshooting</h3>
+            <h3>Support</h3>
             <ul>
-              <li><a target="_blank" href="https://github.com/guardian/content-api/blob/master/docs/troubleshooting-for-frontend.md">Try this doc</a></li>
-              <li>TODO: write more docs...</li>
+              <li><a target="_blank" href="https://docs.google.com/a/guardian.co.uk/document/d/1Mz0cp0Ktq1IaOoVd-kqWF_VK25g9E6QQXiiXCTqbXno/edit?usp=sharing">Playbook</a></li>
             </ul>
           </div>
 
@@ -37,7 +36,7 @@
             <h3>Monitoring</h3>
             <ul>
               <li><a target="_blank" href="http://gu-radiator.appspot.com/capi.html">Radiator</a></li>
-              <li><a target="_blank" href="http://logs.capi.gutools.co.uk/">Kibana</a></li>
+              <li><a target="_blank" href="http://logs.capi.gutools.co.uk/">Logs</a></li>
             </ul>
           </div>
         </div>
@@ -80,9 +79,6 @@
               <div class="col-md-4">
                 <h3>Links</h3>
                 <ul>
-                  @for(url <- panel.env.fastlyUrl) {
-                    <li><a target="_blank" href="@url/to=@{DateTime.now.getMillis / 1000}&from=@{DateTime.now.minusHours(8).getMillis / 1000}&by=minute">Fastly stats (last 8 hours)</a></li>
-                  }
                   @for(url <- panel.env.nightwatchUrl) {
                     <li><a target="_blank" href="@url">Nightwatch (status dashboard)</a></li>
                   }

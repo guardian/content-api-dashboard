@@ -13,7 +13,6 @@ object Environments {
       Environment(
         stage = stage,
         stack = stack,
-        fastlyUrl = cfg("fastlyUrl"),
         nightwatchUrl = cfg("nightwatchUrl"),
         pubflowUrl = cfg("pubflowUrl"),
         masheryUrl = cfg("masheryUrl"),
