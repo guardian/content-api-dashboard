@@ -80,9 +80,6 @@
               <div class="col-md-4">
                 <h3>Links</h3>
                 <ul>
-                  @for(url <- panel.env.fastlyUrl) {
-                    <li><a target="_blank" href="@url/to=@{DateTime.now.getMillis / 1000}&from=@{DateTime.now.minusHours(8).getMillis / 1000}&by=minute">Fastly stats (last 8 hours)</a></li>
-                  }
                   @for(url <- panel.env.nightwatchUrl) {
                     <li><a target="_blank" href="@url">Nightwatch (status dashboard)</a></li>
                   }

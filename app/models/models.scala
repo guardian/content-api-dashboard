@@ -55,7 +55,6 @@ object App {
 case class Environment(
     stage: Stage,
     stack: Stack,
-    fastlyUrl: Option[String],
     nightwatchUrl: Option[String],
     pubflowUrl: Option[String],
     masheryUrl: Option[String],
