@@ -1,5 +1,7 @@
 package services
 
+import com.amazonaws.auth.{ AWSCredentialsProviderChain, EnvironmentVariableCredentialsProvider, SystemPropertiesCredentialsProvider, InstanceProfileCredentialsProvider }
+import com.amazonaws.auth.profile.ProfileCredentialsProvider
 import com.amazonaws.handlers.AsyncHandler
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.ec2.AmazonEC2AsyncClient
@@ -13,7 +15,14 @@ class EC2InstanceFinder(config: Configuration) {
 
   private val client = {
     val region = Regions.fromName(config.getString("aws.region") getOrElse "eu-west-1")
-    val client = new AmazonEC2AsyncClient()
+    val awsCredsProvider = new AWSCredentialsProviderChain(
+      new EnvironmentVariableCredentialsProvider(),
+      new SystemPropertiesCredentialsProvider(),
+      new ProfileCredentialsProvider("capi"),
+      new ProfileCredentialsProvider(),
+      new InstanceProfileCredentialsProvider()
+    )
+    val client = new AmazonEC2AsyncClient(awsCredsProvider)
     client.configureRegion(region)
     client
   }
