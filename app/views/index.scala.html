@@ -112,11 +112,13 @@
             <div class="row">
               <div class="col-md-4">
                 <h3>Elasticsearch <small>(links to HEAD)</small></h3>
-                  <ul>
-                  @for(host <- panel.elasticsearchHosts) {
-                    <li><a target="_blank" href="http://@host:9200/_plugin/head">@{host.replaceAllLiterally(".compute.amazonaws.com", "")}</a></li>
-                  }
-                  </ul>
+                <span>
+                  <code id="elastic_@{panel.env.stage}_@{panel.env.stack}">elasticsearch/scripts/open-HEAD-plugin.sh @{panel.env.stage} @{panel.env.stack}</code>
+                  <button style="margin:2px 10px" class="copy-button" data-clipboard-target="elastic_@{panel.env.stage}_@{panel.env.stack}">
+                    <span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
+                  </button>
+                  <span style="display:none">Copied!</span>
+                </span>
               </div>
 
               <div class="col-md-8">

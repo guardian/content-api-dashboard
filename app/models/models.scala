@@ -18,8 +18,8 @@ object Stage {
     override def writes(stage: Stage): JsValue = JsString(stage.stageName)
   }
 }
-case object `PROD-VPC` extends Stage { val stageName = "PROD-VPC" }
-case object `CODE-VPC` extends Stage { val stageName = "CODE-VPC" }
+case object `PROD` extends Stage { val stageName = "PROD" }
+case object `CODE` extends Stage { val stageName = "CODE" }
 
 sealed trait Stack extends AwsTagProvider {
   def stackName: String
@@ -80,6 +80,4 @@ object Environment {
   implicit val environmentWrites = Json.writes[Environment]
 }
 
-case class Panel(
-  env: Environment,
-  elasticsearchHosts: Seq[String])
+case class Panel(env: Environment)
