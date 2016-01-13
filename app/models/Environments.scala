@@ -6,7 +6,7 @@ object Environments {
 
   def buildEnvironments(config: Configuration): Seq[Environment] = {
     for {
-      stage <- Seq(`PROD-VPC`, `CODE-VPC`)
+      stage <- Seq(`PROD`, `CODE`)
       stack <- Seq(live, preview)
     } yield {
       def cfg(key: String) = config.getString(s"$stage.$stack.$key")
