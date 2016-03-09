@@ -15,6 +15,11 @@
         "Subnets": {
             "Description": "Subnets to run load balancer within",
             "Type": "List<AWS::EC2::Subnet::Id>"
+        },
+        "AMI": {
+            "Description": "AMI ID",
+            "Type": "String",
+            "Default": "ami-b0be07c3"
         }
     },
 
@@ -139,7 +144,7 @@
             "Type": "AWS::AutoScaling::LaunchConfiguration",
 
             "Properties": {
-                "ImageId": "ami-aa0d49dd",
+                "ImageId": {"Ref": "AMI"},
                 "AssociatePublicIpAddress": true,
                 "SecurityGroups": [ { "Ref": "ApplicationSecurityGroup" } ],
                 "InstanceType": "t2.nano",
@@ -156,16 +161,16 @@
                             "mkdir -p /etc/gu",
 
                             { "Fn::Join": [ "", [ "wget https://s3-eu-west-1.amazonaws.com/content-api-dist/content-api-dashboard/",{ "Ref": "Stage" }, "/content-api-dashboard/content-api-dashboard-0.1-SNAPSHOT.tgz" ] ] },
-                            { "Fn::Join": [ "", [ "wget https://s3-eu-west-1.amazonaws.com/content-api-dist/content-api-dashboard/",{ "Ref": "Stage" }, "/content-api-dashboard/content-api-dashboard.conf" ] ] },
+                            { "Fn::Join": [ "", [ "wget https://s3-eu-west-1.amazonaws.com/content-api-dist/content-api-dashboard/",{ "Ref": "Stage" }, "/content-api-dashboard/content-api-dashboard.service" ] ] },
                             "tar -xvf content-api-dashboard-0.1-SNAPSHOT.tgz",
                             "rm content-api-dashboard-0.1-SNAPSHOT.tgz",
                             "mv content-api-dashboard-0.1-SNAPSHOT content-api-dashboard",
-                            "mv content-api-dashboard.conf /etc/init",
+                            "mv content-api-dashboard.service /etc/systemd/system/",
                             "chown -R content-api /home/content-api /etc/gu",
                             "chgrp -R content-api /home/content-api /etc/gu",
                             { "Fn::Join": [ "", [ "aws s3 cp s3://content-api-config/content-api-dashboard/",{ "Ref": "Stage" }, "/content-api-dashboard.conf /etc/gu/content-api-dashboard.conf" ] ] },
 
-                            "start content-api-dashboard"
+                            "systemctl start content-api-dashboard"
                         ] ]
                     }
                 }

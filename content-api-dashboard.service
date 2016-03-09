@@ -1,0 +1,16 @@
+[Unit]
+Description=content-api-dashboard
+
+[Service]
+User=content-api
+Group=content-api
+Restart=no
+Environment='HOME=/home/content-api'
+WorkingDirectory=/home/content-api/content-api-dashboard
+
+Environment='JAVA_OPTS=-Xmx256m -Xms256m -XX:+UseConcMarkSweepGC -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:/home/content-api/logs/gc.log -XX:+TieredCompilation -XX:ReservedCodeCacheSize=256m -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dconfig.file=/etc/gu/content-api-dashboard.conf'
+
+ExecStart=/bin/bash -c '/home/content-api/content-api-dashboard/bin/content-api-dashboard >> /home/content-api/logs/content-api-dashboard.log 2>&1'
+
+[Install]
+WantedBy=multi-user.target
