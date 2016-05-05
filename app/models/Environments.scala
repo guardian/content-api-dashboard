@@ -15,7 +15,6 @@ object Environments {
         stack = stack,
         nightwatchUrl = cfg("nightwatchUrl"),
         pubflowUrl = cfg("pubflowUrl"),
-        masheryUrl = cfg("masheryUrl"),
         apiIndexerUrl = cfg("apiIndexerUrl"),
         publicConciergeUrl = cfg("publicConciergeUrl"),
         internalConciergeUrl = cfg("internalConciergeUrl")
