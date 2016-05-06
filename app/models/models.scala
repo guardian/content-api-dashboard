@@ -43,13 +43,12 @@ sealed trait App extends AwsTagProvider {
     ("App", appName)
   )
 }
-case object Attendant extends App { val appName = "attendant" }
 case object Concierge extends App { val appName = "concierge" }
 case object Elasticsearch extends App { val appName = "elasticsearch" }
 case object Porter extends App { val appName = "porter" }
 
 object App {
-  val apps = Seq(Attendant, Concierge, Elasticsearch, Porter)
+  val apps = Seq(Concierge, Elasticsearch, Porter)
 }
 
 case class Environment(
@@ -57,7 +56,6 @@ case class Environment(
     stack: Stack,
     nightwatchUrl: Option[String],
     pubflowUrl: Option[String],
-    masheryUrl: Option[String],
     apiIndexerUrl: Option[String],
     publicConciergeUrl: Option[String],
     internalConciergeUrl: Option[String]) extends AwsTagProvider {
