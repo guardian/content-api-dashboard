@@ -6,6 +6,16 @@
             "data": {
                 "bucket": "content-api-dist"
             }
+        },
+        "content-api-dashboard-ami-update" : {
+            "type": "ami-cloudformation-parameter",
+            "data": {
+                "amiTags" : ["ubuntu-wily-java-8"],
+                "amiParameter" : "AMI",
+                "cloudFormationStackName": "content-api-dashboard",
+                "prependStackToCloudFormationStackName" : false,
+                "appendStageToCloudFormationStackName" : true
+            }
         }
     },
     "recipes": {
@@ -17,6 +27,9 @@
         },
         "deployOnly": {
             "actions": [ "content-api-dashboard.deploy" ]
+        },
+        "ami-cloudformation-parameter" : {
+            "actions": [ "content-api-dashboard-ami-update.update" ]
         }
     }
 }
