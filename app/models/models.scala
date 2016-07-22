@@ -56,7 +56,7 @@ case class Environment(
     stack: Stack,
     nightwatchUrl: Option[String],
     pubflowUrl: Option[String],
-    apiIndexerUrl: Option[String],
+    bonoboUrl: Option[String],
     publicConciergeUrl: Option[String],
     internalConciergeUrl: Option[String]) extends AwsTagProvider {
 
