@@ -1,7 +1,5 @@
 @(panels: Seq[models.Panel], firstName: String)
 
-@import org.joda.time.DateTime
-
 @main("Content API dashboard") {
 
   <header><h1>Content API <small>Howdy, @firstName!</small></h1></header>
@@ -19,10 +17,10 @@
             <h3>GitHub</h3>
             <ul>
               <li><a target="_blank" href="https://github.com/guardian/content-api">content-api</a></li>
-              <li><a target="_blank" href="https://github.com/guardian/api-indexer">api-indexer</a></li>
               <li><a target="_blank" href="https://github.com/guardian/shuttlerun">shuttlerun</a></li>
               <li><a target="_blank" href="https://github.com/guardian/pubflow">pubflow</a></li>
               <li><a target="_blank" href="https://github.com/guardian/crier">crier</a></li>
+              <li><a target="_blank" href="https://github.com/guardian/bonobo">bonobo</a></li>
             </ul>
           </div>
 
@@ -57,7 +55,7 @@
 
         <div class="panel-body">
           @for(panel <- panels) {
-            <div class="col-md-3"><a class="btn btn-primary btn-block" href="#@{panel.env.stage}_@{panel.env.stack}" role="button">@panel.env.stage @panel.env.stack</a></div>
+            <div class="col-md-3"><a class="btn btn-primary btn-block" href="#@{panel.env.stagePrefix}_@{panel.env.stack}" role="button">@panel.env.stagePrefix.toStageName(panel.animal) @panel.env.stack</a></div>
           }
         </div>
 
@@ -72,8 +70,8 @@
         <div class="panel panel-default">
 
           <div class="panel-heading">
-            <a name="@{panel.env.stage}_@{panel.env.stack}"></a>
-            <h2 class="panel-title">@panel.env.stage @panel.env.stack</h2>
+            <a name="@{panel.env.stagePrefix}_@{panel.env.stack}"></a>
+            <h2 class="panel-title">@panel.env.stagePrefix.toStageName(panel.animal) @panel.env.stack </h2>
           </div>
 
           <div class="panel-body">
@@ -87,8 +85,8 @@
                   @for(url <- panel.env.pubflowUrl) {
                     <li><a target="_blank" href="@url">Pubflow (publication monitoring)</a></li>
                   }
-                  @for(url <- panel.env.apiIndexerUrl) {
-                    <li><a target="_blank" href="@url">api-indexer UI</a></li>
+                  @for(url <- panel.env.bonoboUrl) {
+                    <li><a target="_blank" href="@url">Bonobo (key management)</a></li>
                   }
                 </ul>
               </div>
@@ -109,14 +107,18 @@
 
             <div class="row">
               <div class="col-md-4">
-                <h3>Elasticsearch <small>(links to HEAD)</small></h3>
+                <h3>Elasticsearch</h3>
                 <span>
-                  <code id="elastic_@{panel.env.stage}_@{panel.env.stack}">elasticsearch/scripts/open-HEAD-plugin.sh @{panel.env.stage} @{panel.env.stack}</code>
-                  <button style="margin:2px 10px" class="copy-button" data-clipboard-target="elastic_@{panel.env.stage}_@{panel.env.stack}">
+                  <code id="elastic_@{panel.env.stagePrefix}_@{panel.env.stack}">elasticsearch/scripts/open-HEAD-plugin.sh @{panel.env.stagePrefix.toStageName(panel.animal)} @{panel.env.stack}</code>
+                  <button style="margin:2px 10px" class="copy-button" data-clipboard-target="elastic_@{panel.env.stagePrefix}_@{panel.env.stack}">
                     <span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
                   </button>
                   <span style="display:none">Copied!</span>
                 </span>
+
+                <div>
+                  <img src="@panel.animal.imageUrl" height="100" width="130">
+                </div>
               </div>
 
               <div class="col-md-8">
@@ -127,10 +129,10 @@
                     <th>Marauder</th>
                   </tr>
                   @for(app <- models.App.apps) {
-                    @defining((panel.env.awsTags ++ app.awsTags).map { case (tagName, value) => s"tag:$tagName=%5E$value$$" }.mkString(";")) { tagFilters =>
+                    @defining((panel.env.awsTags ++ app.awsTags).map { case (tagName, value) => s"tag:$tagName=$value" }.mkString(";")) { tagFilters =>
                       <tr>
                         <td><a target="_blank" href="https://eu-west-1.console.aws.amazon.com/ec2/v2/home?region=eu-west-1#Instances:@tagFilters;sort=launchTime">@app</a></td>
-                        <td><code id="marauder_@{panel.env.stage}_@{panel.env.stack}_@{app.appName}">marauder stage=@{panel.env.stage} stack=@{panel.env.stack.stackName} @{app.appName}</code><button style="margin:0 10px" class="copy-button" data-clipboard-target="marauder_@{panel.env.stage}_@{panel.env.stack}_@{app.appName}"><span class="glyphicon glyphicon-copy" aria-hidden="true"></span></button><span style="display:none">Copied!</span></td>
+                        <td><code id="marauder_@{panel.env.stagePrefix}_@{panel.env.stack}_@{app.appName}">marauder stage=@{panel.env.stagePrefix.toStageName(panel.animal)} stack=@{panel.env.stack.stackName} @{app.appName}</code><button style="margin:0 10px" class="copy-button" data-clipboard-target="marauder_@{panel.env.stagePrefix}_@{panel.env.stack}_@{app.appName}"><span class="glyphicon glyphicon-copy" aria-hidden="true"></span></button><span style="display:none">Copied!</span></td>
                       </tr>
                     }
                   }
