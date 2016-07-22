@@ -6,26 +6,34 @@ trait AwsTagProvider {
   def awsTags: Seq[(String, String)]
 }
 
-sealed trait Stage extends AwsTagProvider {
-  def stageName: String
+sealed trait StagePrefix extends AwsTagProvider {
+  def stagePrefix: String
 
   def awsTags = Seq(
-    ("Stage", stageName)
+    ("Stage", stagePrefix)
   )
+
+  def toStageName(animal: Animal): String = s"$stagePrefix-$animal"
 }
-object Stage {
-  implicit val writes = new Writes[Stage] {
-    override def writes(stage: Stage): JsValue = JsString(stage.stageName)
+object StagePrefix {
+  implicit val writes = new Writes[StagePrefix] {
+    override def writes(stage: StagePrefix): JsValue = JsString(stage.stagePrefix)
   }
 }
-case object `PROD` extends Stage { val stageName = "PROD" }
-case object `CODE` extends Stage { val stageName = "CODE" }
+case object `PROD` extends StagePrefix { val stagePrefix = "PROD" }
+case object `CODE` extends StagePrefix { val stagePrefix = "CODE" }
+
+sealed trait Animal {
+  def imageUrl: String
+}
+case object AARDVARK extends Animal { def imageUrl = "https://upload.wikimedia.org/wikipedia/commons/1/12/Aardvark2_(PSF).png" }
+case object ZEBRA extends Animal { def imageUrl = "https://pixabay.com/static/uploads/photo/2015/10/04/16/40/silhouette-971334_960_720.png" }
 
 sealed trait Stack extends AwsTagProvider {
   def stackName: String
 
   def awsTags = Seq(
-    ("Stack", stackName)
+    ("Stack", s"%5E$stackName$$")
   )
 }
 object Stack {
@@ -40,7 +48,7 @@ sealed trait App extends AwsTagProvider {
   def appName: String
 
   def awsTags = Seq(
-    ("App", appName)
+    ("App", s"%5E$appName$$")
   )
 }
 case object Concierge extends App { val appName = "concierge" }
@@ -52,7 +60,7 @@ object App {
 }
 
 case class Environment(
-    stage: Stage,
+    stagePrefix: StagePrefix,
     stack: Stack,
     nightwatchUrl: Option[String],
     pubflowUrl: Option[String],
@@ -60,7 +68,7 @@ case class Environment(
     publicConciergeUrl: Option[String],
     internalConciergeUrl: Option[String]) extends AwsTagProvider {
 
-  def awsTags = stage.awsTags ++ stack.awsTags
+  def awsTags = stagePrefix.awsTags ++ stack.awsTags
 
   private def removeTrailingSlash(url: String): String =
     if (url.endsWith("/")) url.dropRight(1) else url
@@ -78,4 +86,4 @@ object Environment {
   implicit val environmentWrites = Json.writes[Environment]
 }
 
-case class Panel(env: Environment)
+case class Panel(env: Environment, animal: Animal)

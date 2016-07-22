@@ -11,7 +11,7 @@ object Environments {
     } yield {
       def cfg(key: String) = config.getString(s"$stage.$stack.$key")
       Environment(
-        stage = stage,
+        stagePrefix = stage,
         stack = stack,
         nightwatchUrl = cfg("nightwatchUrl"),
         pubflowUrl = cfg("pubflowUrl"),
