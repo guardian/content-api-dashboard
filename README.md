@@ -1,3 +1,5 @@
+# This project is now depreciated
+
 # Content API Dashboard
 
 This is the entry point for anyone (CAPI team or otherwise) who wants to do any ops work on CAPI.
